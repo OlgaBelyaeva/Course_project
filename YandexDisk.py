@@ -34,10 +34,13 @@ class YandexDisk:
             params = {'path': disk_file_path, 'overwrite': 'true', 'url': url_foto}
             upload_url = "https://cloud-api.yandex.net/v1/disk/resources/upload"
             response = requests.post(upload_url, headers=self.headers, params=params)
+            response.raise_for_status()
+            if response.status_code != 202:
+                print('Что-то пошло не так')
             foto_info = {"file_name": file_name, 'size': i['size']}
             uploaded_foto_json.append(foto_info)
             status_bar.next()
         status_bar.finish()
         with open('uploaded_files.json', 'w') as file_obj:
             json.dump(uploaded_foto_json, file_obj)
-        return True
+        print('Фото успешно загружены.')

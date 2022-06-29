@@ -10,7 +10,6 @@ def foto_VK_loader():
     if command == 'нет':
         pass
 
-
 # foto_VK_loader()
 
 

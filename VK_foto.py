@@ -1,8 +1,4 @@
 import requests
-import time
-
-# with open('token_vk.txt', 'r') as file_object:
-#     token = file_object.read().strip()
 
 class VK_foto:
 
@@ -25,16 +21,23 @@ class VK_foto:
         response = requests.get(URL, params=params)
         response.raise_for_status()
         if response.status_code == 200:
-            print("Удалось успешно получить доступ к фото на указанного пользователя.")
+            print("Удалось успешно получить доступ к фотографиям указанного пользователя.")
+        print(f"Количество фотографий в профиле пользователя: {(response.json()['response']['count'])}")
+        foto_quantity = int(input('Какое количество из них хотите загрузить на ЯндексДиск? Введите число: '))
         for i in response.json()['response']['items']:
-            sizes = {}
-            for el in i['sizes']:
-                size = el['height'] * el['width']
-                sizes[size] = el['url']
-            foto_max_size = {'url': sizes[max(sizes)],
+            if len(foto_for_upload) + 1 <= foto_quantity:
+                sizes = {}
+                for el in i['sizes']:
+                    size = el['height'] * el['width']
+                    sizes[size] = el['url']
+                    foto_max_size = {'url': sizes[max(sizes)],
                             'size': max(sizes),
                             'id': i['id'],
                             'likes': i['likes']['count'] + i['likes']['user_likes'],
-                            'date': time.strftime('%Y%B%d%A%H_%M_%S', time.localtime(i['date']))}
-            foto_for_upload.append(foto_max_size)
+                            'date': (i['date'])}
+                foto_for_upload.append(foto_max_size)
+            else:
+                pass
         return(foto_for_upload)
+
+
